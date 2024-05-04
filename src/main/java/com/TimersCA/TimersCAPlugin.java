@@ -133,12 +133,6 @@ public class TimersCAPlugin extends Plugin
 	}
 
 	@Subscribe
-	private void onConfigChanged(ConfigChanged event) {
-
-
-	}
-
-	@Subscribe
 	private void onGameTick(GameTick event) {
 		displayTicksRemaining--;
 		WorldPoint localRealTile = WorldPoint.fromLocalInstance(client, client.getLocalPlayer().getLocalLocation());
