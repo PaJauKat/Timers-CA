@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @PluginDescriptor(
-		name = "<html>[<font color=\"#59D634\">P</font>] Timers CA</html>",
-		description = "",
+		name = "Timers CA",
+		description = "Shows the current time on some bosses listed in Combat Achievements",
 		tags = {"pajau", "nex", "muspah", "zulrah", "vardorvis", "leviathan", "hespori", "vorkath", "whisperer", "duke", "timers", "ca", "combat achievement"}
 )
 public class TimersCAPlugin extends Plugin
