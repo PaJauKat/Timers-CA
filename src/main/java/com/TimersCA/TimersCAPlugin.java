@@ -130,8 +130,6 @@ public class TimersCAPlugin extends Plugin
 		for (Boss boss : bosses) {
 			eventBus.unregister(boss);
 		}
-
-
 	}
 
 	@Subscribe
