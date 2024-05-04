@@ -34,6 +34,8 @@ import java.util.regex.Pattern;
 public class TimersCAPlugin extends Plugin
 {
 
+	protected static final Pattern KILL_PATTERN = Pattern.compile("Your (?<bossName>[\\w\\s]+) kill count is: (?<kc>\\d+)\\.");
+
 	@Inject
 	private Client client;
 
@@ -144,9 +146,6 @@ public class TimersCAPlugin extends Plugin
 		displayTicksRemaining = 500;
 		actualBoss.updateTime();
 	}
-
-
-	protected static final Pattern KILL_PATTERN = Pattern.compile("Your (?<bossName>[\\w\\s]+) kill count is: (?<kc>\\d+)\\.");
 
 	@Subscribe
 	private void onChatMessage(ChatMessage event) {
