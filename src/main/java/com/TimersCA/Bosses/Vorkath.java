@@ -8,6 +8,7 @@ import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.NpcChanged;
+import net.runelite.api.events.NpcDespawned;
 import net.runelite.client.eventbus.Subscribe;
 
 import javax.inject.Inject;
@@ -41,6 +42,16 @@ public class Vorkath extends Boss {
             startTick = client.getTickCount();
             onFight = true;
             vorkath = event.getNpc();
+        }
+    }
+
+    @Subscribe
+    private void onNpcDespawned(NpcDespawned event) {
+        if (event.getNpc() == null || event.getNpc().getName() == null) {
+            return;
+        }
+        if (VORKATH_IDS.stream().anyMatch(x->x == event.getNpc().getId())) {
+            onFight = false;
         }
     }
 

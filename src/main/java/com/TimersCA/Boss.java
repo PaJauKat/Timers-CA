@@ -1,6 +1,7 @@
 package com.TimersCA;
 
 import net.runelite.api.Client;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.ui.overlay.components.LayoutableRenderableEntity;
 import net.runelite.client.ui.overlay.components.LineComponent;
 
@@ -45,7 +46,8 @@ public abstract class Boss {
     }
 
     public void updateTime() {
-        if (this.onFight) {
+        WorldPoint localRealTile = WorldPoint.fromLocalInstance(client, client.getLocalPlayer().getLocalLocation());
+        if (this.onFight && this.regionIDs.contains(localRealTile.getRegionID())) {
             this.timeFighting = formatTime(Math.max(0, client.getTickCount() - this.startTick + 1));
         }
     }

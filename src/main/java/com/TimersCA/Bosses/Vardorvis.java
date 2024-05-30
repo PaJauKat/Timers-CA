@@ -4,8 +4,12 @@ import com.TimersCA.Boss;
 import com.TimersCA.TimersCAConfig;
 import com.TimersCA.TimersCAPlugin;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.api.NPC;
+import net.runelite.api.NpcID;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.HitsplatApplied;
+import net.runelite.api.events.NpcDespawned;
 import net.runelite.client.eventbus.Subscribe;
 
 import javax.inject.Inject;
@@ -31,6 +35,24 @@ public class Vardorvis extends Boss {
         if (!onFight && npc.getId() == 12223) {
             onFight = true;
             startTick = client.getTickCount();
+        }
+    }
+
+    @Subscribe
+    private void onNpcDespawned(NpcDespawned event) {
+        if (event.getNpc() == null) {
+            return;
+        }
+
+        if (event.getNpc().getId() == 12223) {
+            onFight = false;
+        }
+    }
+
+    @Subscribe
+    private void onGameStateChanged(GameStateChanged event) {
+        if (event.getGameState() != GameState.LOGGED_IN) {
+            onFight = false;
         }
     }
 }

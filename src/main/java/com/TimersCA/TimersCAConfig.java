@@ -194,4 +194,23 @@ public interface TimersCAConfig extends Config {
         return true;}
 
 
+
+    //-------------------------------------------------------------
+
+    @ConfigSection(
+            name = "Grotesque",
+            description = "",
+            position = 7
+    )
+    String grotesqueSection = "Grotesque";
+
+    @ConfigItem(
+            name = "Show",
+            description = "",
+            keyName = "grotesqueShow",
+            section = grotesqueSection
+    )
+    default boolean grotesqueShow() {
+        return true;}
+
 }

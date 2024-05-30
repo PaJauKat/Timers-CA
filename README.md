@@ -11,3 +11,4 @@ Shows the current time on some bosses listed in Combat Achievements
 - Vorkath
 - Hespori
 - Muspah
+- Grotesque

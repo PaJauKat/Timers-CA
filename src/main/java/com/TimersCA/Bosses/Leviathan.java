@@ -22,6 +22,10 @@ public class Leviathan extends Boss {
 
     @Subscribe
     void onNpcSpawned(NpcSpawned event) {
+        if (event.getNpc() == null) {
+            return;
+        }
+
         if (event.getNpc().getId() == 12214) {
             startTick = client.getTickCount();
             onFight = true;
@@ -30,6 +34,10 @@ public class Leviathan extends Boss {
 
     @Subscribe
     void onNpcDespawned(NpcDespawned event) {
+        if (event.getNpc() == null) {
+            return;
+        }
+
         if (event.getNpc().getId() == 12214) {
             onFight = false;
         }

@@ -5,6 +5,7 @@ import com.TimersCA.TimersCAConfig;
 import com.TimersCA.TimersCAPlugin;
 import net.runelite.api.Client;
 import net.runelite.api.NpcID;
+import net.runelite.api.events.NpcDespawned;
 import net.runelite.api.events.NpcSpawned;
 import net.runelite.client.eventbus.Subscribe;
 
@@ -29,6 +30,17 @@ public class Hespori extends Boss {
         if (event.getNpc().getId() == NpcID.HESPORI) {
             startTick = client.getTickCount() + 1;
             onFight = true;
+        }
+    }
+
+    @Subscribe
+    private void onNpcDespawned(NpcDespawned event) {
+        if (event.getNpc() == null) {
+            return;
+        }
+
+        if (event.getNpc().getId() == NpcID.HESPORI) {
+            onFight = false;
         }
     }
 

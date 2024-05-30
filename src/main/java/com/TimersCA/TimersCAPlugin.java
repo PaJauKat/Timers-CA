@@ -7,8 +7,10 @@ import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ChatMessage;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
@@ -68,6 +70,9 @@ public class TimersCAPlugin extends Plugin
 	private Hespori hespori;
 
 	@Inject
+	private Grotesque grotesque;
+
+	@Inject
 	private EventBus eventBus;
 
 	@Inject
@@ -108,6 +113,7 @@ public class TimersCAPlugin extends Plugin
 		bosses.add(vorkath);
 		bosses.add(vardorvis);
 		bosses.add(hespori);
+		bosses.add(grotesque);
 
 		this.overlayManager.add(overlay);
 		this.overlayManager.add(timersCAPanelOverlay);
@@ -154,6 +160,15 @@ public class TimersCAPlugin extends Plugin
 			}
 			if (lastBoss instanceof Duke) {
 				duke.setTicks2revive(20);
+			}
+		}
+	}
+
+	@Subscribe
+	private void onGameStateChanged(GameStateChanged event) {
+		if (event.getGameState().getState() == GameState.LOGIN_SCREEN.getState()) {
+			for (Boss boss : bosses) {
+				boss.onFight = false;
 			}
 		}
 	}
