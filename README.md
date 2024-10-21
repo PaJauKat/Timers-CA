@@ -12,3 +12,7 @@ Shows the current time on some bosses listed in Combat Achievements
 - Hespori
 - Muspah
 - Grotesque
+- Amoxliatl
+- Araxxor
+- Hueycoatl
+- Hydra
