@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
@@ -36,7 +37,7 @@ import java.util.regex.Pattern;
 public class TimersCAPlugin extends Plugin
 {
 
-	protected static final Pattern KILL_PATTERN = Pattern.compile("Your (?<bossName>[\\w\\s]+) kill count is: (?<kc>\\d+)\\.");
+	protected static final Pattern KILL_PATTERN = Pattern.compile("Your (?<bossName>[\\w\\s]+) kill count is: (?<kc>[,\\d]+)\\.");
 
 	@Inject
 	private Client client;
@@ -70,7 +71,19 @@ public class TimersCAPlugin extends Plugin
 	private Hespori hespori;
 
 	@Inject
+	private Hydra hydra;
+
+	@Inject
 	private Grotesque grotesque;
+
+	@Inject
+	private Araxxor araxxor;
+
+	@Inject
+	private Hueycoatl hueycoatl;
+
+	@Inject
+	private Amoxliatl amoxliatl;
 
 	@Inject
 	private EventBus eventBus;
@@ -87,7 +100,6 @@ public class TimersCAPlugin extends Plugin
 	@Inject
 	private TimersCAConfig config;
 
-
 	private final Set<Boss> bosses = new HashSet<>();
 	protected int displayTicksRemaining = 0;
 	private static final HashMap<Integer, Boss> bossMap = new HashMap<>();
@@ -95,6 +107,7 @@ public class TimersCAPlugin extends Plugin
 	private Boss actualBoss = null;
 	@Getter
 	private Boss lastBoss = null;
+
 
 	@Provides
 	TimersCAConfig getConfig(ConfigManager configManager) {
@@ -114,6 +127,10 @@ public class TimersCAPlugin extends Plugin
 		bosses.add(vardorvis);
 		bosses.add(hespori);
 		bosses.add(grotesque);
+		bosses.add(hydra);
+		bosses.add(araxxor);
+		bosses.add(hueycoatl);
+		bosses.add(amoxliatl);
 
 		this.overlayManager.add(overlay);
 		this.overlayManager.add(timersCAPanelOverlay);
@@ -143,6 +160,12 @@ public class TimersCAPlugin extends Plugin
 		displayTicksRemaining--;
 		WorldPoint localRealTile = WorldPoint.fromLocalInstance(client, client.getLocalPlayer().getLocalLocation());
 		actualBoss = bossMap.get(localRealTile.getRegionID());
+		if (actualBoss == null || actualBoss != lastBoss) {
+			if (lastBoss != null) {
+				lastBoss.onFight = false;
+				lastBoss.reset();
+			}
+		}
 		if (actualBoss == null) {
 			return;
 		}
@@ -171,6 +194,14 @@ public class TimersCAPlugin extends Plugin
 				boss.onFight = false;
 			}
 		}
+	}
+
+	public static WorldPoint toRealWorld(WorldPoint worldPoint,Client client) {
+		LocalPoint lp = LocalPoint.fromWorld(client.getTopLevelWorldView(), worldPoint);
+		if (lp == null) {
+			return null;
+		}
+		return WorldPoint.fromLocalInstance(client, lp);
 	}
 
 

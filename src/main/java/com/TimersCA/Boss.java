@@ -35,8 +35,11 @@ public abstract class Boss {
     protected boolean isInstance = true;
 
 
+    public void reset(){};
+
+
     public boolean display(){
-        return this.regionIDs.stream().anyMatch(x -> client.getLocalPlayer().getWorldLocation().getRegionID() == x) && (!isInstance || client.isInInstancedRegion());
+        return this.regionIDs.stream().anyMatch(x -> client.getLocalPlayer().getWorldLocation().getRegionID() == x) && (!isInstance || client.getTopLevelWorldView().isInstance());
     }
 
     public List<LayoutableRenderableEntity> getLines() {

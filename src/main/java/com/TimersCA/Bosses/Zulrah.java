@@ -46,17 +46,4 @@ public class Zulrah extends Boss {
         }
     }
 
-    @Subscribe
-    private void onNpcSpawned(NpcSpawned event) {
-        if (event.getNpc() == null) {
-            return;
-        }
-        /*if (ZULRAH_IDS.contains(event.getNpc().getId())) {
-            startTick = client.getTickCount();
-            onFight = true;
-        }*/
-    }
-
-
-
 }
