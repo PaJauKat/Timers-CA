@@ -45,20 +45,46 @@ public class Hueycoatl extends Boss {
         }
     }
 
-
     @Subscribe
-    private void onNpcSpawned(NpcSpawned event) {
-        if (event.getNpc() == null) {
-            return;
-        }
+    private void onGameTick(GameTick event) {
+        WorldPoint localRealTile = WorldPoint.fromLocalInstance(client, client.getLocalPlayer().getLocalLocation());
 
-        if (event.getNpc().getId() == 14017) {
-            this.startTick = client.getTickCount();
-            this.onTail = true;
-            this.onFight = true;
+        if (localRealTile.getRegionID() == 5939) {
+            Optional<? extends NPC> seer = client.getTopLevelWorldView().npcs().stream().filter(x -> x.getId() == 14008).findFirst();
+            if (seer.isPresent()) {
+
+                /*if (seer.get().getPoseAnimation() != lastPoseAnim) {
+                    WorldPoint seerRealTile = WorldPoint.fromLocalInstance(client, seer.get().getLocalLocation());
+                    if (seer.get().getPoseAnimation() == 819 && Objects.equals(seerRealTile, seerInitialLoc)) {
+                        onFight = true;
+                        startTick = client.getTickCount()+2;
+                    }
+
+                    lastPoseAnim = seer.get().getPoseAnimation();
+                }*/
+
+                if (!Objects.equals(seer.get().getOverheadText(), lastText)) {
+                    if (seer.get().getOverheadText() != null) {
+                        switch (seer.get().getOverheadText()) {
+                            case "Let's convince that beastie to move!":
+                                onTail = true;
+                                onFight = true;
+                                startTick = client.getTickCount()-3;
+                                break;
+                            case "Nicely done!":
+                                /*onTail = false;
+                                huecoStart = client.getTickCount();*/
+                                break;
+                            case "Oof!":
+                                onFight = false;
+                                onTail = false;
+                        }
+                    }
+                    lastText = seer.get().getOverheadText();
+                }
+            }
         }
     }
-
 
     @Override
     public void updateTime() {
