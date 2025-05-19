@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 public class TimersCAPlugin extends Plugin
 {
 
-	protected static final Pattern KILL_PATTERN = Pattern.compile("Your (?<bossName>[\\w\\s]+) kill count is: (?<kc>[,\\d]+)\\.");
+	protected static final Pattern KILL_PATTERN = Pattern.compile("Your (?<bossName>[\\w\\s]+) (?:kill count|success count) is: (?<kc>[,\\d]+)\\.");
 
 	@Inject
 	private Client client;
@@ -86,6 +86,9 @@ public class TimersCAPlugin extends Plugin
 	private Amoxliatl amoxliatl;
 
 	@Inject
+	private Yama yama;
+
+	@Inject
 	private EventBus eventBus;
 
 	@Inject
@@ -131,6 +134,7 @@ public class TimersCAPlugin extends Plugin
 		bosses.add(araxxor);
 		bosses.add(hueycoatl);
 		bosses.add(amoxliatl);
+		bosses.add(yama);
 
 		this.overlayManager.add(overlay);
 		this.overlayManager.add(timersCAPanelOverlay);

@@ -26,7 +26,6 @@ public abstract class Boss {
         this.config = config;
     }
 
-    protected boolean show = true;
     protected String name = "";
     protected int startTick = -1;
     protected String timeFighting = "";

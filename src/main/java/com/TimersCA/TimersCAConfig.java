@@ -295,6 +295,46 @@ public interface TimersCAConfig extends Config {
     //----------------------------------------------------------------
 
     @ConfigSection(
+            name = "Yama",
+            description = "",
+            position = 10,
+            closedByDefault = true
+    )
+    String yamaSection = "Yama";
+
+    @ConfigItem(
+            name = "Show",
+            description = "",
+            keyName = "yamaShow",
+            section = yamaSection
+    )
+    default boolean yamaShow() {
+        return true;
+    }
+
+    @ConfigItem(
+            name = "Show splits",
+            description = "",
+            keyName = "showYamaSplits",
+            section = yamaSection
+    )
+    default boolean showYamaSplits() {
+        return true;
+    }
+
+    @ConfigItem(
+            name = "Show Minion Splits",
+            description = "",
+            keyName = "showMinionSplits",
+            section = yamaSection
+    )
+    default boolean showMinionSplits() {
+        return true;
+    }
+
+    //----------------------------------------------------------------
+
+    @ConfigSection(
             name = "Amoxliatl",
             description = "",
             position = 9,
