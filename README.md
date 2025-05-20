@@ -16,3 +16,4 @@ Shows the current time on some bosses listed in Combat Achievements
 - Araxxor
 - Hueycoatl
 - Hydra
+- Yama
