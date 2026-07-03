@@ -397,6 +397,38 @@ public interface TimersCAConfig extends Config {
         }
     }
 
+    //----------------------------------------------------------------
+
+    @ConfigSection(
+            name = "Maggot King",
+            description = "",
+            position = 10,
+            closedByDefault = true
+    )
+    String maggotKingSection = "Maggot King";
+
+    @ConfigItem(
+            name = "Show",
+            description = "",
+            keyName = "maggotkingShow",
+            section = maggotKingSection
+    )
+    default boolean maggotKingShow() {
+        return true;
+    }
+
+    @ConfigItem(
+            name = "Show instance kills",
+            description = "",
+            keyName = "maggotKingInstanceKills",
+            section = maggotKingSection
+    )
+    default boolean maggotKingInstanceKills() {
+        return true;
+    }
+
+
+
 
     @AllArgsConstructor
     enum TimerType{

@@ -17,3 +17,4 @@ Shows the current time on some bosses listed in Combat Achievements
 - Hueycoatl
 - Hydra
 - Yama
+- Maggot King

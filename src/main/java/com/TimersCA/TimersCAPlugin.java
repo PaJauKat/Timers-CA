@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 @PluginDescriptor(
 		name = "Timers CA",
 		description = "Shows the current time on some bosses listed in Combat Achievements",
-		tags = {"pajau", "nex", "muspah", "zulrah", "vardorvis", "leviathan", "hespori", "vorkath", "whisperer", "duke", "timers", "ca", "combat achievement"}
+		tags = {"pajau", "nex", "muspah", "zulrah", "vardorvis", "leviathan", "hespori", "vorkath", "whisperer", "duke", "timers", "ca", "combat achievement", "maggot king"}
 )
 public class TimersCAPlugin extends Plugin
 {
@@ -89,6 +89,9 @@ public class TimersCAPlugin extends Plugin
 	private Yama yama;
 
 	@Inject
+	private MaggotKing maggotKing;
+
+	@Inject
 	private EventBus eventBus;
 
 	@Inject
@@ -135,6 +138,7 @@ public class TimersCAPlugin extends Plugin
 		bosses.add(hueycoatl);
 		bosses.add(amoxliatl);
 		bosses.add(yama);
+		bosses.add(maggotKing);
 
 		this.overlayManager.add(overlay);
 		this.overlayManager.add(timersCAPanelOverlay);
@@ -187,6 +191,8 @@ public class TimersCAPlugin extends Plugin
 			}
 			if (lastBoss instanceof Duke) {
 				duke.setTicks2revive(20);
+			} else if (lastBoss instanceof MaggotKing) {
+				maggotKing.incrementKills();
 			}
 		}
 	}

@@ -21,7 +21,7 @@ public class Duke extends Boss {
 
     private static final int SLEEPING_DUKE = 12167;
     private static final int ALIVE_DUKE = 12191;
-    protected static final int DEATH_DUKE = 12192;
+    private static final int DEATH_DUKE = 12192;
 
     @Getter
     @Setter
