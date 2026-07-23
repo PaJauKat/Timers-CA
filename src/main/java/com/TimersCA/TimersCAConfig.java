@@ -1,12 +1,10 @@
 package com.TimersCA;
 
-import com.TimersCA.Bosses.Araxxor;
 import lombok.AllArgsConstructor;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigSection;
-import net.runelite.client.ui.overlay.infobox.Timer;
 
 @ConfigGroup("timersCaKat")
 public interface TimersCAConfig extends Config {
@@ -411,7 +409,8 @@ public interface TimersCAConfig extends Config {
             name = "Show",
             description = "",
             keyName = "maggotkingShow",
-            section = maggotKingSection
+            section = maggotKingSection,
+            position = -2
     )
     default boolean maggotKingShow() {
         return true;
@@ -427,6 +426,39 @@ public interface TimersCAConfig extends Config {
         return true;
     }
 
+    @ConfigItem(
+            name = "Show Expected Kill Time",
+            description = "",
+            keyName = "maggotKingExpectedKillTime",
+            section = maggotKingSection
+    )
+    default boolean maggotShowExpectedKillTime() {
+        return true;
+    }
+
+    @ConfigItem(
+            name = "CA kills",
+            description = "",
+            keyName = "maggotCaKills",
+            section = maggotKingSection
+    )
+    default MaggotKingCaKills maggotCaKills() {
+        return MaggotKingCaKills.CONDENSED;
+    }
+
+    @AllArgsConstructor
+    enum MaggotKingCaKills {
+        CONDENSED("Condensed"),
+        DONT_SHOW("Don't show"),
+        DETAILED("Detailed");
+
+        private final String des;
+
+        @Override
+        public String toString() {
+            return des;
+        }
+    }
 
 
 
