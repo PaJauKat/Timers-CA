@@ -18,3 +18,4 @@ Shows the current time on some bosses listed in Combat Achievements
 - Hydra
 - Yama
 - Maggot King
+- Royal Titans
