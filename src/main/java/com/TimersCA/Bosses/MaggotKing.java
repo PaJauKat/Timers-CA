@@ -3,6 +3,7 @@ package com.TimersCA.Bosses;
 import com.TimersCA.Boss;
 import com.TimersCA.TimersCAConfig;
 import com.TimersCA.TimersCAPlugin;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.coords.WorldPoint;
@@ -13,9 +14,12 @@ import net.runelite.client.ui.overlay.components.LayoutableRenderableEntity;
 import net.runelite.client.ui.overlay.components.LineComponent;
 
 import javax.inject.Inject;
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 public class MaggotKing extends Boss {
 
     private static final int MAGGOT_KING_ALIVE = 15742;
@@ -23,13 +27,15 @@ public class MaggotKing extends Boss {
     private static final int MAGGOT_KING_REGION_ID = 11645;
 
     private int lastRegionId = -1;
-    private boolean newInstance = false;
-    private int startTickCA = -1;
-
     private String timeCA = "";
 
     private int kills = -1;
-    private boolean counting = false;
+    private final int[] times = new int[5];
+    private int currentKillTime = 0;
+    private String expectedKillTime;
+
+    private static final Color PASTEL_GREEN = new Color(150, 255, 150);
+    private static final Color PASTEL_RED = new Color(255, 150, 150);
 
     @Inject
     public MaggotKing(Client client, TimersCAPlugin plugin, TimersCAConfig config) {
@@ -40,6 +46,19 @@ public class MaggotKing extends Boss {
 
     public void incrementKills() {
         this.kills++;
+        if (this.kills > 5 || this.kills <= 0) {
+            return;
+        }
+        try {
+            times[kills - 1] = currentKillTime;
+            int remainingKills = 5 - kills;
+            if (remainingKills > 0) {
+                int expectedTick = (900 - Arrays.stream(times).sum()) / remainingKills;
+                expectedKillTime = formatTime(expectedTick);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            log.error("ArrayIndexOutOfBoundsException: {}", e.getMessage());
+        }
     }
 
     @Subscribe
@@ -48,12 +67,12 @@ public class MaggotKing extends Boss {
 
         if (localRealTile.getRegionID() != lastRegionId) {
             if (localRealTile.getRegionID() == MAGGOT_KING_REGION_ID) {
-                newInstance = true;
                 kills = 0;
-            } else {
-                counting = false;
-                newInstance = false;
+                currentKillTime = 0;
+                Arrays.fill(times, 0);
+                expectedKillTime = formatTime(900/5);
             }
+
             lastRegionId = localRealTile.getRegionID();
         }
     }
@@ -67,29 +86,82 @@ public class MaggotKing extends Boss {
         if (event.getNpc().getId() == MAGGOT_KING_ALIVE) {
             startTick = client.getTickCount();
             onFight = true;
-            if (newInstance) {
-                startTickCA = client.getTickCount();
-                newInstance = false;
-                counting = true;
-            }
         }
     }
 
     @Override
     public void updateTime() {
-        super.updateTime();
-        if (counting) {
-            this.timeCA = formatTime(Math.max(0, client.getTickCount() - this.startTickCA + 1));
+        WorldPoint localRealTile = WorldPoint.fromLocalInstance(client, client.getLocalPlayer().getLocalLocation());
+
+        if (this.onFight && this.regionIDs.contains(localRealTile.getRegionID())) {
+            currentKillTime = Math.max(0,client.getTickCount() - this.startTick + 1);
+            this.timeFighting = formatTime(currentKillTime);
+
+            if (kills <= 4) {
+                int sumTime = Arrays.stream(times).sum() + currentKillTime;
+                this.timeCA = formatTime(sumTime);
+            }
         }
     }
 
     @Override
     public List<LayoutableRenderableEntity> getLines() {
-        List<LayoutableRenderableEntity> lines = new ArrayList<>();
+        List<LayoutableRenderableEntity> lines = new ArrayList<>(8);
+
         lines.add(LineComponent.builder().left(this.name).right(timeFighting).build());
+
         if (config.maggotKingInstanceKills()) {
             lines.add(LineComponent.builder().left("Kills").right(String.valueOf(this.kills)).build());
+
+            int validKillCount = 0;
+            for (int time : times) {
+                if (time > 0) {
+                    validKillCount++;
+                }
+            }
+
+            final var caKillsConfig = config.maggotCaKills();
+            switch (caKillsConfig) {
+                case DETAILED:
+                    if (kills <= 5) {
+                        for (int i = 0; i < times.length; i++) {
+                            int time = times[i];
+                            if (time <= 0) {
+                                continue;
+                            }
+
+                            Color color = time > 180 ? PASTEL_RED : PASTEL_GREEN;
+
+                            lines.add(LineComponent.builder()
+                                    .left("Kill " + (i + 1))
+                                    .right(formatTime(time))
+                                    .rightColor(color)
+                                    .build());
+                        }
+                    }
+                    break;
+                case CONDENSED:
+                    break;
+            }
+
+            if (caKillsConfig == TimersCAConfig.MaggotKingCaKills.DETAILED || caKillsConfig == TimersCAConfig.MaggotKingCaKills.CONDENSED) {
+                lines.add(LineComponent.builder()
+                        .left("C.A. (" + validKillCount + ")")
+                        .right(this.timeCA)
+                        .build());
+            }
+
+            if (config.maggotShowExpectedKillTime() && this.kills < 5 && this.expectedKillTime != null) {
+                Color estimatedColor = this.expectedKillTime.startsWith("-") ? PASTEL_RED : Color.WHITE;
+
+                lines.add(LineComponent.builder()
+                        .left("Estimated")
+                        .right(this.expectedKillTime)
+                        .rightColor(estimatedColor)
+                        .build());
+            }
         }
+
         return lines;
     }
 }

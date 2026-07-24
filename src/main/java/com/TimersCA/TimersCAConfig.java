@@ -1,22 +1,29 @@
 package com.TimersCA;
 
-import com.TimersCA.Bosses.Araxxor;
 import lombok.AllArgsConstructor;
-import net.runelite.client.config.Config;
-import net.runelite.client.config.ConfigGroup;
-import net.runelite.client.config.ConfigItem;
-import net.runelite.client.config.ConfigSection;
-import net.runelite.client.ui.overlay.infobox.Timer;
+import net.runelite.client.config.*;
 
 @ConfigGroup("timersCaKat")
 public interface TimersCAConfig extends Config {
 
     String GROUP_NAME = "timersCaKat";
 
+    @Units(Units.TICKS)
+    @ConfigItem(
+            name = "Display duration",
+            description = "How many ticks to show the timer after leaving the boss area (1 tick = 0.6 seconds)",
+            keyName = "displayTicksRemaining",
+            position = 1
+    )
+    default int displayTicksRemaining() {
+        return 100;
+    }
+
     @ConfigSection(
             name = "Duke Sucellus",
             description = "",
-            position = 3
+            position = 3,
+            closedByDefault = true
     )
     String dukeSection = "Duke Sucellus";
 
@@ -411,7 +418,8 @@ public interface TimersCAConfig extends Config {
             name = "Show",
             description = "",
             keyName = "maggotkingShow",
-            section = maggotKingSection
+            section = maggotKingSection,
+            position = -2
     )
     default boolean maggotKingShow() {
         return true;
@@ -427,6 +435,59 @@ public interface TimersCAConfig extends Config {
         return true;
     }
 
+    @ConfigItem(
+            name = "Show Expected Kill Time",
+            description = "",
+            keyName = "maggotKingExpectedKillTime",
+            section = maggotKingSection
+    )
+    default boolean maggotShowExpectedKillTime() {
+        return true;
+    }
+
+    @ConfigItem(
+            name = "CA kills",
+            description = "",
+            keyName = "maggotCaKills",
+            section = maggotKingSection
+    )
+    default MaggotKingCaKills maggotCaKills() {
+        return MaggotKingCaKills.CONDENSED;
+    }
+
+    @AllArgsConstructor
+    enum MaggotKingCaKills {
+        CONDENSED("Condensed"),
+        DETAILED("Detailed"),
+        DONT_SHOW("Don't show");
+
+        private final String des;
+
+        @Override
+        public String toString() {
+            return des;
+        }
+    }
+
+    //----------------------------------------------------------------
+
+    @ConfigSection(
+            name = "Royal Titans",
+            description = "",
+            position = 11,
+            closedByDefault = true
+    )
+    String titansSection = "Royal Titans";
+
+    @ConfigItem(
+            name = "Show",
+            description = "",
+            keyName = "titansShow",
+            section = titansSection
+    )
+    default boolean titansShow() {
+        return true;
+    }
 
 
 
