@@ -5,9 +5,8 @@ import com.TimersCA.TimersCAConfig;
 import com.TimersCA.TimersCAPlugin;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
-import net.runelite.api.NpcID;
 import net.runelite.api.events.AnimationChanged;
-import net.runelite.api.events.NpcSpawned;
+import net.runelite.api.gameval.NpcID;
 import net.runelite.client.eventbus.Subscribe;
 
 import javax.inject.Inject;
@@ -15,9 +14,9 @@ import java.util.List;
 
 public class Zulrah extends Boss {
     private static final List<Integer> ZULRAH_IDS = List.of(
-            NpcID.ZULRAH,
-            NpcID.ZULRAH_2043,
-            NpcID.ZULRAH_2044
+            NpcID.SNAKEBOSS_BOSS_RANGED,
+            NpcID.SNAKEBOSS_BOSS_MELEE,
+            NpcID.SNAKEBOSS_BOSS_MAGIC
     );
 
     private int lastAnimation = -1;

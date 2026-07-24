@@ -460,6 +460,26 @@ public interface TimersCAConfig extends Config {
         }
     }
 
+    //----------------------------------------------------------------
+
+    @ConfigSection(
+            name = "Royal Titans",
+            description = "",
+            position = 11,
+            closedByDefault = true
+    )
+    String titansSection = "Royal Titans";
+
+    @ConfigItem(
+            name = "Show",
+            description = "",
+            keyName = "titansShow",
+            section = titansSection
+    )
+    default boolean titansShow() {
+        return true;
+    }
+
 
 
     @AllArgsConstructor

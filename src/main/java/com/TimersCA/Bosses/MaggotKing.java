@@ -30,7 +30,7 @@ public class MaggotKing extends Boss {
     private String timeCA = "";
 
     private int kills = -1;
-    private int[] times = new int[5];
+    private final int[] times = new int[5];
     private int currentKillTime = 0;
     private String expectedKillTime;
 
