@@ -6,6 +6,7 @@ import net.runelite.client.ui.overlay.components.LayoutableRenderableEntity;
 import net.runelite.client.ui.overlay.components.LineComponent;
 
 import javax.inject.Inject;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -55,11 +56,17 @@ public abstract class Boss {
     }
 
     public String formatTime(int ticks) {
-        int millis = ticks * 600;
-        return String.format("%2d:%02d:%s",
-                TimeUnit.MILLISECONDS.toMinutes(millis),
-                TimeUnit.MILLISECONDS.toSeconds(millis) % 60,
-                String.valueOf(millis%1000).charAt(0));
+        String prefix = ticks < 0 ? "-" : "";
+
+        long millis = Math.abs((long) ticks) * 600;
+
+        Duration duration = Duration.ofMillis(millis);
+        long minutes = duration.toMinutes();
+        long seconds = duration.toSecondsPart();          // Segundos restantes (0-59)
+        long tenths = duration.toMillisPart() / 100;      // Décimas de segundo (0-9)
+
+        // 4. Formato uniforme y consistente
+        return String.format("%s%2d:%02d.%d", prefix, minutes, seconds, tenths);
     }
 
 }

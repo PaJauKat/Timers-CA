@@ -34,6 +34,9 @@ public class MaggotKing extends Boss {
     private int currentKillTime = 0;
     private String expectedKillTime;
 
+    private static final Color PASTEL_GREEN = new Color(150, 255, 150);
+    private static final Color PASTEL_RED = new Color(255, 150, 150);
+
     @Inject
     public MaggotKing(Client client, TimersCAPlugin plugin, TimersCAConfig config) {
         super(client, plugin, config);
@@ -94,33 +97,71 @@ public class MaggotKing extends Boss {
             currentKillTime = Math.max(0,client.getTickCount() - this.startTick + 1);
             this.timeFighting = formatTime(currentKillTime);
 
-            int sumTime = Arrays.stream(times).sum() + currentKillTime;
-            this.timeCA = formatTime(sumTime);
+            if (kills <= 4) {
+                int sumTime = Arrays.stream(times).sum() + currentKillTime;
+                this.timeCA = formatTime(sumTime);
+            }
         }
     }
 
     @Override
     public List<LayoutableRenderableEntity> getLines() {
-        List<LayoutableRenderableEntity> lines = new ArrayList<>();
+        List<LayoutableRenderableEntity> lines = new ArrayList<>(8);
+
         lines.add(LineComponent.builder().left(this.name).right(timeFighting).build());
+
         if (config.maggotKingInstanceKills()) {
             lines.add(LineComponent.builder().left("Kills").right(String.valueOf(this.kills)).build());
-            switch (config.maggotCaKills()) {
+
+            int validKillCount = 0;
+            for (int time : times) {
+                if (time > 0) {
+                    validKillCount++;
+                }
+            }
+
+            final var caKillsConfig = config.maggotCaKills();
+            switch (caKillsConfig) {
                 case DETAILED:
-                    for (int i = 0; i < times.length; i++) {
-                        Color color = times[i] > 180 ? Color.GREEN : Color.RED;
-                        lines.add(LineComponent.builder().left("Kill " + (i + 1)).right(formatTime(times[i])).rightColor(color).build());
+                    if (kills <= 5) {
+                        for (int i = 0; i < times.length; i++) {
+                            int time = times[i];
+                            if (time <= 0) {
+                                continue;
+                            }
+
+                            Color color = time > 180 ? PASTEL_RED : PASTEL_GREEN;
+
+                            lines.add(LineComponent.builder()
+                                    .left("Kill " + (i + 1))
+                                    .right(formatTime(time))
+                                    .rightColor(color)
+                                    .build());
+                        }
                     }
-                    lines.add(LineComponent.builder().left("C.A. (" + Arrays.stream(times).filter(t -> t > 0).count() + ")").right(this.timeCA).build());
                     break;
                 case CONDENSED:
-                    lines.add(LineComponent.builder().left("C.A. (" + Arrays.stream(times).filter(t -> t > 0).count() + ")").right(this.timeCA).build());
                     break;
             }
+
+            if (caKillsConfig == TimersCAConfig.MaggotKingCaKills.DETAILED || caKillsConfig == TimersCAConfig.MaggotKingCaKills.CONDENSED) {
+                lines.add(LineComponent.builder()
+                        .left("C.A. (" + validKillCount + ")")
+                        .right(this.timeCA)
+                        .build());
+            }
+
             if (config.maggotShowExpectedKillTime() && this.kills < 5 && this.expectedKillTime != null) {
-                lines.add(LineComponent.builder().left("E.K.T.").right(this.expectedKillTime).build());
+                Color estimatedColor = this.expectedKillTime.startsWith("-") ? PASTEL_RED : Color.WHITE;
+
+                lines.add(LineComponent.builder()
+                        .left("Estimated")
+                        .right(this.expectedKillTime)
+                        .rightColor(estimatedColor)
+                        .build());
             }
         }
+
         return lines;
     }
 }
