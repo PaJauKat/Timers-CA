@@ -182,7 +182,7 @@ public class TimersCAPlugin extends Plugin
 			return;
 		}
 		lastBoss = actualBoss;
-		displayTicksRemaining = 100;
+		displayTicksRemaining = config.displayTicksRemaining();
 		actualBoss.updateTime();
 	}
 
