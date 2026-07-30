@@ -489,6 +489,26 @@ public interface TimersCAConfig extends Config {
         return true;
     }
 
+    //----------------------------------------------------------------
+
+    @ConfigSection(
+            name = "MadAngel",
+            description = "",
+            position = 12,
+            closedByDefault = true
+    )
+    String madAngelSection = "MadAngel";
+
+    @ConfigItem(
+            name = "Show",
+            description = "",
+            keyName = "madangelShow",
+            section = madAngelSection
+    )
+    default boolean madangelShow() {
+        return true;
+    }
+
 
 
     @AllArgsConstructor

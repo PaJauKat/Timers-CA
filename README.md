@@ -19,3 +19,4 @@ Shows the current time on some bosses listed in Combat Achievements
 - Yama
 - Maggot King
 - Royal Titans
+- Mad Angel
